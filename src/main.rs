@@ -2,14 +2,8 @@ use clap::{crate_version, App, Arg, SubCommand};
 use std::error::Error;
 
 const VERSION: &'static str = env!("CARGO_PKG_VERSION");
-const VER: &'static str = env!("VERGEN_GIT_SEMVER");
 
 fn main() -> Result<(), Box<dyn Error>> {
-    println!("VERSION: {}", VERSION);
-    println!("VER: {}", VER);
-    println!("Build Timestamp: {}", env!("VERGEN_BUILD_TIMESTAMP"));
-    println!("git semver: {}", env!("VERGEN_GIT_SEMVER"));
-
     let matches = App::new("Clap subcommands")
         .version(crate_version!())
         .about("Experiment with dispatching subcommands")
@@ -31,7 +25,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         V1,
         V2,
     }
-    let variant = Variants::V2;
+    let variant = Variants::V1;
     match variant {
         Variants::V1 => {
             // If else if dispatch
@@ -45,7 +39,9 @@ fn main() -> Result<(), Box<dyn Error>> {
                 };
                 println!("sub2 SYMBOL={}", sym);
             } else {
-                println!("Incorrect usage try: expr-clap-dispatching help");
+                // Run with no parameters or bug.
+                // For instance if "sub1" or "sub2" was misspelled or missing.
+                return Err("Incorrect usage try: expr-clap-dispatching help".into());
             }
         }
         Variants::V2 => {
@@ -53,10 +49,12 @@ fn main() -> Result<(), Box<dyn Error>> {
             println!("Variants::V2");
             let subcmd = match &matches.subcommand {
                 Some(sc) => sc,
-                None => return Err("No subcommand try: expr-clap-dispatching help".into()),
+                // None run when no parameters
+                None => return Err("Incorrect usage try: expr-clap-dispatching help".into()),
             };
             match subcmd.name.as_str() {
-                "sub0" => {
+                //"sub0" => { // cause `_ =>` case to execute
+                "sub1" => {
                     println!("sub1");
                 }
                 "sub2" => {
