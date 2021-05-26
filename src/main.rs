@@ -2,8 +2,14 @@ use clap::{crate_version, App, Arg, SubCommand};
 use std::error::Error;
 
 const VERSION: &'static str = env!("CARGO_PKG_VERSION");
+const VER: &'static str = env!("VERGEN_GIT_SEMVER");
 
 fn main() -> Result<(), Box<dyn Error>> {
+    println!("VERSION: {}", VERSION);
+    println!("VER: {}", VER);
+    println!("Build Timestamp: {}", env!("VERGEN_BUILD_TIMESTAMP"));
+    println!("git semver: {}", env!("VERGEN_GIT_SEMVER"));
+
     let matches = App::new("Clap subcommands")
         .version(crate_version!())
         .about("Experiment with dispatching subcommands")
